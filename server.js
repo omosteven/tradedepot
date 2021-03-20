@@ -57,7 +57,7 @@ app.use((error, req, res, next) => { // console.log(error);
 });
 
 
-const server = app.listen(5000, (params) => {
+const server = app.listen(process.env.PORT, (params) => {
     host = server.address().address;
 
     port = process.env.PORT === undefined ? server.address().port : process.env.PORT;
