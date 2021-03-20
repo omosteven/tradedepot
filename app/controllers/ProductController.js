@@ -116,8 +116,8 @@ class ProductController { // method to create a new product
         };
 
         // validate received body payload
-        if (req.body) {
-            let payloadCheckRes = payloadChecker.validator(req.body, expectedPayload, [
+        if (req.query) {
+            let payloadCheckRes = payloadChecker.validator(req.query, expectedPayload, [
                 "address", "city", "country"
             ], false);
 
