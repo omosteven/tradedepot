@@ -125,7 +125,11 @@ class ProductController { // method to create a new product
             // check if the payload is successfully validated or not
             if (payloadCheckRes.success) {
 
-                ProductModel.find({}, (fetchErr, fetchRes) => {
+                ProductModel.find({}, null, {
+                    sort: {
+                        "created_at": -1
+                    }
+                }, (fetchErr, fetchRes) => {
 
                     if (fetchErr) { // Not Found due to an error
                         res.status(404).json({name: "Fetch Products", "message": "An error occurred", "success": false})
@@ -232,8 +236,12 @@ class ProductController { // method to create a new product
             // check if the payload is successfully validated or not
             if (payloadCheckRes.success) {
 
-                CommentsModel.findOne({
+                CommentsModel.find({
                     productID: req.query.productID
+                }, null, {
+                    sort: {
+                        "created_at": -1
+                    }
                 }, (fetchErr, fetchRes) => {
 
                     if (fetchErr) { // Not Found due to an error
