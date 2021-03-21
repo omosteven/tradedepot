@@ -35,7 +35,7 @@ const ProductModel = new mongoose.Schema({
 
         required: true,
 
-        unique : true
+        unique: true
     },
 
     productImgUrl: {
@@ -43,7 +43,7 @@ const ProductModel = new mongoose.Schema({
 
         required: true,
 
-        unique : true
+        unique: true
 
     },
 
@@ -62,6 +62,11 @@ const ProductModel = new mongoose.Schema({
     country: {
         type: String,
 
+        required: true
+    },
+
+    no_of_comments: {
+        type: Number,
         required: true
     }
 });

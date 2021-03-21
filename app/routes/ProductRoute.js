@@ -10,4 +10,8 @@ router.post("/create/", uploadFile.single("productImg"), ProductController.creat
 
 router.get("/fetchall/", ProductController.fetchProducts);
 
+router.post("/comments/publish/", ProductController.postComment);
+
+router.get("/comments/fetchall/", ProductController.fetchComments);
+
 module.exports = router;

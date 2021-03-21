@@ -9,6 +9,7 @@ const Util = require("../helpers/Util");
 
 // import the models
 const ProductModel = require("../models/ProductModel");
+const CommentsModel = require("../models/CommentsModel");
 
 class ProductController { // method to create a new product
     static async createNew(req, res) {
@@ -23,7 +24,7 @@ class ProductController { // method to create a new product
             "address": "",
             "city": "",
             "country": "",
-            "productPrice" : ""
+            "productPrice": ""
         };
 
         // validate received body payload
@@ -54,7 +55,7 @@ class ProductController { // method to create a new product
                             let fileUpload;
 
                             // generate a random string and extend the payload for productUrl
-                            req.body.productUrl = "https://tradedepot/product/" + Util.generateRandomStr(10);
+                            req.body.productUrl = "/products/" + Util.generateRandomStr(10);
 
                             let uploadResp = FireStore.uploadImage(req.file.path, req.file.filename);
 
@@ -138,6 +139,119 @@ class ProductController { // method to create a new product
             }
         } else {
             res.status(404).json({name: "Fetch Products", "message": "Incorrect payload", "sucess": false})
+
+        }
+    }
+
+
+    static postComment(req, res) {
+        // validate the input
+
+        // set the expected payload object
+
+        let expectedPayload = {
+            "token": "",
+            "postedBy": "",
+            "productID": "",
+            "comment": ""
+        };
+
+        // validate received body payload
+        if (req.body) {
+            let payloadCheckRes = payloadChecker.validator(req.body, expectedPayload, [
+                "token", "postedBy", "productID", "comment"
+            ], true);
+
+            // check if the payload is successfully validated or not
+            if (payloadCheckRes.success) {
+                let tokenToEmail = Token.verify(req.body.token);
+
+                // check if the token is not expired yet
+                if (tokenToEmail) { // check if the email is valid
+
+                    if (validator.isEmail(tokenToEmail)) { // extend the payload by email_of_postedBy
+                        req.body.email_of_postedBy = tokenToEmail;
+                        // validate the product id first
+                        ProductModel.findOne({
+                            _id: req.body.productID
+                        }, (proErr, proSuc) => {
+
+                            if (proErr) { // Product not found
+                                res.status(404).json({name: "Post Comment", "message": "An error occurred", "success": false})
+
+                            } else { // Add comment to CommentsModel
+
+                                if (proSuc === null) {
+                                    res.status(404).json({name: "Post Comment", "message": "This product seems to have been deleted", "sucess": false})
+
+                                } else {
+                                    let addComment = new CommentsModel(req.body);
+
+                                    addComment.save().then(() => { // successfully added
+                                        res.status(200).json({name: "Post Comment", "message": "Your comment has been posted successfully", "sucess": true})
+
+                                    }).catch(() => {
+                                        res.status(404).json({name: "Post Comment", "message": "An error occurred", "success": false})
+                                    })
+                                }
+                            }
+                        })
+
+                    } else { // Unauthorized email
+                        res.status(401).json({name: "Post Comment", "message": "Invalid email", "sucess": false})
+
+                    }
+
+                } else { // Access Forbidden
+                    res.status(403).json({name: "Post Comment", "message": "Session expired or invalid", "sucess": false})
+                }
+            } else {
+                res.status(400).json({name: "Post Comment", "message": payloadCheckRes.response.errorMessage, "success": false})
+            }
+        } else {
+            res.status(404).json({name: "Post Comment", "message": "Incorrect payload", "sucess": false})
+
+        }
+    }
+
+
+    // method to fetch all comments of a product
+    static fetchComments(req, res) {
+        // validate the input
+
+        // set the expected payload object
+
+        let expectedPayload = {
+            "productID": ""
+        };
+
+        // validate received body payload
+        if (req.query) {
+            let payloadCheckRes = payloadChecker.validator(req.query, expectedPayload, ["productID"], false);
+
+            // check if the payload is successfully validated or not
+            if (payloadCheckRes.success) {
+
+                CommentsModel.findOne({
+                    productID: req.query.productID
+                }, (fetchErr, fetchRes) => {
+
+                    if (fetchErr) { // Not Found due to an error
+                        res.status(404).json({name: "Fetch Product's Comments", "message": "An error occurred", "success": false})
+
+                    } else {
+                        if (fetchRes === null) {
+                            res.status(404).json({name: "Fetch Product's Comments", "message": "This product seems to have been deleted", "sucess": false})
+                        } else {
+                            res.status(200).json({name: "Fetch Product's Comments", "message": "Successfully fetched", "success": true, "data": fetchRes})
+                        }
+                    }
+                })
+            } else {
+                res.status(400).json({name: "Fetch Product's Comments", "message": payloadCheckRes.response.errorMessage, "success": false})
+            }
+        } else {
+            res.status(404).json({name: "Fetch Product's Comments", "message": "Incorrect payload", "sucess": false})
 
         }
     }
