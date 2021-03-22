@@ -186,7 +186,7 @@ class ProductController { // method to create a new product
             if (payloadCheckRes.success) {
 
                 ProductModel.findOne({
-                    _id: productID
+                    _id: req.query.productID
                 }, (fetchErr, fetchRes) => {
 
                     if (fetchErr) { // Not Found due to an error
@@ -311,7 +311,7 @@ class ProductController { // method to create a new product
 
                     } else {
                         if (fetchRes === null) {
-                            res.status(404).json({name: "Fetch Product's Comments", "message": "This product seems to have been deleted", "sucess": false})
+                            res.status(404).json({name: "Fetch Product's Comments", "message": "This product seems to have no comments yet", "sucess": false})
                         } else {
                             res.status(200).json({name: "Fetch Product's Comments", "message": "Successfully fetched", "success": true, "data": fetchRes})
                         }
