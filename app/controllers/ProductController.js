@@ -198,7 +198,7 @@ class ProductController { // method to create a new product
                 })
 
             } else {
-                res.status(400).json({name: "Fetch Product Info", "message": payloadCheckRes.response.errorMessage, "success": false})
+                res.status(400).json({name: "Fetch Product Info", "message": "Ops, you've taken a wrong entry", "success": false})
             }
         } else {
             res.status(404).json({name: "Fetch Product Info", "message": "Incorrect payload", "sucess": false})
@@ -272,7 +272,7 @@ class ProductController { // method to create a new product
                     res.status(403).json({name: "Post Comment", "message": "You need to be logged in first", "sucess": false})
                 }
             } else {
-                res.status(400).json({name: "Post Comment", "message": payloadCheckRes.response.errorMessage, "success": false})
+                res.status(400).json({name: "Post Comment", "message": "Ops, you've taken a wrong entry", "success": false})
             }
         } else {
             res.status(404).json({name: "Post Comment", "message": "Incorrect payload", "sucess": false})

@@ -87,7 +87,8 @@ class AuthController {
             "fullName": "",
             "email": "",
             "password": "",
-            "address": "",
+            "city": "",
+            "state" : "",
             "country": ""
         };
 
@@ -97,7 +98,8 @@ class AuthController {
                 "fullName",
                 "email",
                 "password",
-                "address",
+                "city",
+                "state",
                 "country"
             ], false);
 

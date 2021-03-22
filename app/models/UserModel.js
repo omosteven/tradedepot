@@ -26,11 +26,24 @@ const UserModel = new mongoose.Schema({
     },
 
     address: {
+        type: String
+    },
+
+    city: {
         type: String,
 
         required: true
     },
 
+    state: {
+        type: String,
+
+        required: true
+    },
+
+    phoneNumber: {
+        type: String
+    },
     country: {
         type: String,
 
