@@ -11,7 +11,7 @@ class Util {
         var transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
-                user: "omosteven123@gmail.com",
+                user: "omosteven90@gmail.com",
                 pass: "adebomii"
             }
         });
