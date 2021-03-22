@@ -124,11 +124,32 @@ class ProductController { // method to create a new product
 
             // check if the payload is successfully validated or not
             if (payloadCheckRes.success) {
+                let sortFunc;
+                // sort by no of comments(Favorites)
+                if (req.query.sort === "comments") {
+                    sortFunc = {
+                        "no_of_comments": -1
+                    }
 
-                ProductModel.find({}, null, {
-                    sort: {
+                } else {
+                    sortFunc = {
                         "created_at": -1
                     }
+                };
+
+                let priorityFunc;
+
+                if (req.query.city.length > 0) { // sort by address
+
+                    priorityFunc = {
+                        "city": req.query.city
+                    }
+                } else {
+                    priorityFunc = {};
+                };
+               
+                ProductModel.find(priorityFunc, null, {
+                    sort: sortFunc
                 }, (fetchErr, fetchRes) => {
 
                     if (fetchErr) { // Not Found due to an error
@@ -138,6 +159,7 @@ class ProductController { // method to create a new product
                         res.status(200).json({name: "Fetch Products", "message": "Successfully fetched", "success": true, "data": fetchRes})
                     }
                 })
+
             } else {
                 res.status(400).json({name: "Fetch Products", "message": payloadCheckRes.response.errorMessage, "success": false})
             }
