@@ -253,7 +253,20 @@ class ProductController { // method to create a new product
                                 } else {
                                     let addComment = new CommentsModel(req.body);
 
-                                    addComment.save().then(() => { // successfully added
+                                    addComment.save().then(async () => { // successfully added
+
+                                        const text = '<h3>Hi ' + proSuc.uploadedBy + '</h3>' + '<p>' + 'Someone just commented on one of your recent products' + '<p/>';
+
+                                        const mailOptions = {
+                                            from: 'TradeDepot',
+                                            to: proSuc.email_of_uploadedBy,
+                                            subject: proSuc.productName + '- New Comment',
+                                            text: text,
+                                            html: text
+                                        };
+
+                                        const sendMailToUser = await Util.sendMail(mailOptions);
+
                                         res.status(200).json({name: "Post Comment", "message": "Your comment has been posted successfully", "sucess": true})
 
                                     }).catch(() => {
