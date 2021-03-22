@@ -176,8 +176,12 @@ class ProductController { // method to create a new product
                     if (validator.isEmail(tokenToEmail)) { // extend the payload by email_of_postedBy
                         req.body.email_of_postedBy = tokenToEmail;
                         // validate the product id first
-                        ProductModel.findOne({
+                        ProductModel.findOneAndUpdate({
                             _id: req.body.productID
+                        }, {
+                            $inc: {
+                                'no_of_comments': 1
+                            }
                         }, (proErr, proSuc) => {
 
                             if (proErr) { // Product not found
