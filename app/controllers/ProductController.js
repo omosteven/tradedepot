@@ -146,7 +146,7 @@ class ProductController { // method to create a new product
                 } else {
                     priorityFunc = {};
                 };
-               
+
                 ProductModel.find(priorityFunc, null, {
                     sort: sortFunc
                 }, (fetchErr, fetchRes) => {
@@ -165,6 +165,43 @@ class ProductController { // method to create a new product
         } else {
             res.status(404).json({name: "Fetch Products", "message": "Incorrect payload", "sucess": false})
 
+        }
+    }
+
+    // method to fetch a product's info
+    static fetchProductInfo(req, res) {
+        // validate the input
+
+        // set the expected payload object
+
+        let expectedPayload = {
+            "productID": ""
+        };
+
+        // validate received body payload
+        if (req.query) {
+            let payloadCheckRes = payloadChecker.validator(req.query, expectedPayload, ["productID"], false);
+
+            // check if the payload is successfully validated or not
+            if (payloadCheckRes.success) {
+
+                ProductModel.findOne({
+                    _id: productID
+                }, (fetchErr, fetchRes) => {
+
+                    if (fetchErr) { // Not Found due to an error
+                        res.status(404).json({name: "Fetch Product Info", "message": "An error occurred", "success": false})
+
+                    } else {
+                        res.status(200).json({name: "Fetch Product Info", "message": "Successfully fetched", "success": true, "data": fetchRes})
+                    }
+                })
+
+            } else {
+                res.status(400).json({name: "Fetch Product Info", "message": payloadCheckRes.response.errorMessage, "success": false})
+            }
+        } else {
+            res.status(404).json({name: "Fetch Product Info", "message": "Incorrect payload", "sucess": false})
         }
     }
 
