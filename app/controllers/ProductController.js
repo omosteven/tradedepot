@@ -88,7 +88,7 @@ class ProductController { // method to create a new product
 
                             }
                         } else { // Access Forbidden
-                            res.status(403).json({name: "Upload Product", "message": "Session expired or invalid", "sucess": false})
+                            res.status(403).json({name: "Upload Product", "message": "You need to be logged in first", "sucess": false})
                         }
                     } else { // Unauthorized email
                         res.status(401).json({name: "Upload Product", "message": "Invalid email", "sucess": false})
@@ -269,7 +269,7 @@ class ProductController { // method to create a new product
                     }
 
                 } else { // Access Forbidden
-                    res.status(403).json({name: "Post Comment", "message": "Session expired or invalid", "sucess": false})
+                    res.status(403).json({name: "Post Comment", "message": "You need to be logged in first", "sucess": false})
                 }
             } else {
                 res.status(400).json({name: "Post Comment", "message": payloadCheckRes.response.errorMessage, "success": false})
